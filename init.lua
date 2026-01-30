@@ -1,0 +1,5 @@
+require("keymaps")
+require("options")
+require("indent")
+require("diagnostics")
+require("config.lazy")

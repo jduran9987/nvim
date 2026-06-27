@@ -23,3 +23,20 @@ vim.keymap.set("n", "]u", function()
   vim.notify("No unsaved buffers", vim.log.levels.INFO)
 end, { desc = "Jump to an unsaved buffer" })
 
+vim.keymap.set("n", "<leader>rf", function()
+  local file = vim.fn.expand("%")
+
+  -- Save the file first
+  vim.cmd("write")
+
+  -- Run ruff check --fix on current file
+  vim.fn.jobstart({ "ruff", "check", "--fix", file }, {
+    on_exit = function()
+      -- Reload buffer after ruff modifies file
+      vim.schedule(function()
+        vim.cmd("edit!")
+        print("Ruff --fix applied")
+      end)
+    end,
+  })
+end, { desc = "Ruff check --fix current file" })

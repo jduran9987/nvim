@@ -10,6 +10,18 @@ return {
       return "🐍 " .. vim.fn.fnamemodify(venv_path, ":t")
     end
     
+    local function smart_filename()
+      local name = vim.api.nvim_buf_get_name(0)
+      if name == "" then
+        return ""
+      end
+      if name:match("^oil://") then
+        local dir = name:gsub("^oil://", "")
+        return vim.fn.fnamemodify(dir, ":~:.")
+      end
+      return vim.fn.fnamemodify(name, ":~:.")
+    end
+
     local function unsaved_buffers()
       local count = 0
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -39,7 +51,7 @@ return {
         lualine_b = { "branch", "diff" },
         lualine_c = {
           venv,
-          "filename",
+          smart_filename,
         },
         lualine_x = { unsaved_buffers, "filetype" },
         lualine_y = { "progress" },

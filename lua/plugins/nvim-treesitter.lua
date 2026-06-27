@@ -3,41 +3,23 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      highlight = { enable = true },
-      indent = { enable = true, disable = { "python" } },
-      ensure_installed = {
-        "bash",
-        "c",
-        "diff",
-        "html",
-        "javascript",
-        "jsdoc",
-        "json",
-        "jsonc",
-        "lua",
-        "luadoc",
-        "markdown",
-        "markdown_inline",
-        "printf",
-        "python",
-        "query",
-        "regex",
-        "toml",
-        "tsx",
-        "typescript",
-        "vim",
-        "vimdoc",
-        "xml",
-        "yaml",
-      },
-      -- optional: install parsers asynchronously
-      sync_install = false,
-      auto_install = true,
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.config").setup(opts)
+    config = function()
+      -- Auto-install missing parsers
+      vim.g.nvim_treesitter = {
+        auto_install = true,
+        ensure_installed = {
+          "bash", "c", "diff", "html", "javascript", "jsdoc", "json", "jsonc",
+          "lua", "luadoc", "markdown", "markdown_inline", "printf", "python",
+          "query", "regex", "toml", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
+        },
+      }
+
+      -- Enable Tree-sitter highlighting for all filetypes
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
     end,
   },
 }
-

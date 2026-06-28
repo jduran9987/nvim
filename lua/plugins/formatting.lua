@@ -6,6 +6,7 @@ return {
       require("conform").setup({
         formatters_by_ft = {
           python = { "ruff_format" },
+          ruby = { "rubocop" },
         },
         format_on_save = function(bufnr)
           if vim.b[bufnr].format_on_save_enabled ~= true then

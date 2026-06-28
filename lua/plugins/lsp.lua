@@ -12,7 +12,7 @@ return {
       -- Mason
       require("mason").setup()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "pyright", "ruff", "bashls", "rust_analyzer", },
+        ensure_installed = { "lua_ls", "pyright", "ruff", "bashls", "rust_analyzer", "ruby_lsp" },
         automatic_enable = false,
       })
 
@@ -66,6 +66,14 @@ return {
         capabilities = capabilities,
       })
 
+      -- Ruby
+      vim.lsp.config("ruby_lsp", {
+        capabilities = capabilities,
+        init_options = {
+          formatter = "none",
+        },
+      })
+
       -- Rust (rust-analyzer)
       vim.lsp.config("rust_analyzer", {
         capabilities = capabilities,
@@ -80,7 +88,7 @@ return {
       })
 
       -- Enable the servers
-      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd", "rust_analyzer" })
+      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd", "rust_analyzer", "ruby_lsp" })
 
       -- Keymaps (buffer-local, only when LSP attaches)
       vim.api.nvim_create_autocmd("LspAttach", {

@@ -13,6 +13,8 @@ vim.keymap.set("n", "<leader>tf", function()
   vim.notify("Format on save: " .. state, vim.log.levels.INFO)
 end, { desc = "Toggle format on save (buffer)" })
 
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show full diagnostic" })
+
 vim.keymap.set("n", "]u", function()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == "" and vim.bo[buf].modified then

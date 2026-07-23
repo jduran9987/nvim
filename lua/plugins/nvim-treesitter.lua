@@ -12,7 +12,7 @@ return {
         ensure_installed = {
           "bash", "c", "diff", "html", "javascript", "jsdoc", "json", "jsonc",
           "lua", "luadoc", "markdown", "markdown_inline", "printf", "python",
-          "query", "regex", "ruby", "toml", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
+          "query", "regex", "rust", "toml", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
         },
       }
 

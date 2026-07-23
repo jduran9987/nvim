@@ -53,7 +53,7 @@ return {
           venv,
           smart_filename,
         },
-        lualine_x = { unsaved_buffers, "filetype" },
+        lualine_x = { unsaved_buffers, function() return vim.lsp.status() end, "filetype" },
         lualine_y = { "progress" },
         lualine_z = { "location" },
       },

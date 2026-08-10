@@ -12,7 +12,7 @@ return {
       -- Mason
       require("mason").setup()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "pyright", "ruff", "bashls" },
+        ensure_installed = { "lua_ls", "pyright", "ruff", "bashls", "terraformls" },
         automatic_enable = false,
       })
 
@@ -66,8 +66,13 @@ return {
         capabilities = capabilities,
       })
 
+      -- Terraform
+      vim.lsp.config("terraformls", {
+        capabilities = capabilities,
+      })
+
       -- Enable the servers
-      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd" })
+      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd", "terraformls" })
 
       -- Keymaps (buffer-local, only when LSP attaches)
       vim.api.nvim_create_autocmd("LspAttach", {

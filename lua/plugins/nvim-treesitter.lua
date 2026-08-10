@@ -10,9 +10,10 @@ return {
       vim.g.nvim_treesitter = {
         auto_install = true,
         ensure_installed = {
-          "bash", "c", "diff", "html", "javascript", "jsdoc", "json", "jsonc",
+          "bash", "c", "diff", "hcl", "html", "javascript", "jsdoc", "json", "jsonc",
           "lua", "luadoc", "markdown", "markdown_inline", "printf", "python",
-          "query", "regex", "rust", "toml", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
+          "query", "regex", "rust", "terraform", "terraform-vars", "toml", "tsx",
+          "typescript", "vim", "vimdoc", "xml", "yaml",
         },
       }
 

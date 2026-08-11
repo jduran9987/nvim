@@ -9,6 +9,12 @@ return {
     },
 
     config = function()
+      -- Neovim's built-in *.tf detection is content-based (disambiguating from the
+      -- TinyFugue mud client) and defaults new/empty buffers to filetype "tf" instead
+      -- of "terraform", so treesitter/LSP don't attach until the file is saved and
+      -- reopened. Force it so Terraform files are recognized immediately.
+      vim.filetype.add({ extension = { tf = "terraform" } })
+
       -- Mason
       require("mason").setup()
       require("mason-lspconfig").setup({
@@ -69,6 +75,13 @@ return {
       -- Terraform
       vim.lsp.config("terraformls", {
         capabilities = capabilities,
+        -- Override lspconfig's default on_attach: it calls vim.lsp.codelens.enable,
+        -- which doesn't exist on Neovim 0.11.5 and throws an ON_ATTACH_ERROR.
+        on_attach = function(_, bufnr)
+          if vim.lsp.codelens and vim.lsp.codelens.enable then
+            vim.lsp.codelens.enable(true, { bufnr = bufnr })
+          end
+        end,
       })
 
       -- Enable the servers

@@ -6,16 +6,17 @@ return {
     config = function()
       vim.opt.rtp:append(vim.fn.stdpath("data") .. "/lazy/nvim-treesitter/runtime")
 
-      -- Auto-install missing parsers
-      vim.g.nvim_treesitter = {
-        auto_install = true,
-        ensure_installed = {
-          "bash", "c", "diff", "hcl", "html", "javascript", "jsdoc", "json", "jsonc",
-          "lua", "luadoc", "markdown", "markdown_inline", "printf", "python",
-          "query", "regex", "rust", "terraform", "terraform-vars", "toml", "tsx",
-          "typescript", "vim", "vimdoc", "xml", "yaml",
-        },
-      }
+      -- Install parsers (main branch API; no-op for ones already installed)
+      require("nvim-treesitter").install({
+        "bash", "c", "diff", "go", "gomod", "gosum", "gowork", "gotmpl",
+        "hcl", "html", "javascript", "jsdoc", "json",
+        "lua", "luadoc", "markdown", "markdown_inline", "printf", "python",
+        "query", "regex", "rust", "terraform", "toml", "tsx",
+        "typescript", "vim", "vimdoc", "xml", "yaml",
+      })
+
+      -- JSONL has no parser of its own; the json parser handles one value per line
+      vim.treesitter.language.register("json", "jsonl")
 
       -- Enable Tree-sitter highlighting for all filetypes
       vim.api.nvim_create_autocmd("FileType", {

@@ -13,7 +13,7 @@ This is a modular Neovim configuration using lazy.nvim for plugin management.
 - `lua/plugins/*.lua` - One file per plugin (auto-imported by lazy.nvim)
 - `lua/options.lua` - Editor settings (line numbers, tabs, clipboard)
 - `lua/keymaps.lua` - Global keybindings
-- `lua/indent.lua` - Filetype-specific indent rules (2-space for yaml/json/lua/toml)
+- `lua/indent.lua` - Filetype-specific indent rules (2-space for yaml/json/lua/toml, real tabs for Go)
 - `lua/diagnostics.lua` - LSP diagnostic display settings
 
 **Plugin pattern:** Each file in `lua/plugins/` returns a lazy.nvim spec table. Plugins use event/cmd/keys triggers for lazy loading.
@@ -25,18 +25,21 @@ This is a modular Neovim configuration using lazy.nvim for plugin management.
 - `<leader>ff/fg/fb/fh` - Telescope find files/grep/buffers/help
 - `-` - Oil file explorer, `<leader>e` - Oil in vsplit
 - `gd` / `K` / `<leader>rn` / `<leader>ca` - LSP go-to-def/hover/rename/code-action
+- `<leader>th` - Toggle inlay hints (buffer-local, on by default when the server supports them)
 
 ## LSP Setup
 
 Configured in `lua/plugins/lsp.lua` using mason.nvim for server management.
 
-**Enabled servers:** lua_ls, pyright, ruff, bashls, clangd, rust_analyzer
+**Enabled servers:** lua_ls, pyright, ruff, bashls, clangd, terraformls, gopls, rust_analyzer (via rustaceanvim)
+
+gopls is installed with `go install` (lives in `~/go/bin`), not mason.
 
 **Pattern:** Uses `vim.lsp.config()` for server settings and `vim.lsp.enable()` to activate. Ruff provides diagnostics/code-actions only (hover/formatting disabled).
 
 ## Formatting
 
-Handled by conform.nvim (`lua/plugins/formatting.lua`). Python uses ruff_format. Format-on-save can be toggled per-buffer with `<leader>tf`.
+Handled by conform.nvim (`lua/plugins/formatting.lua`). Python uses ruff_format, Go uses goimports + gofumpt (both installed with `go install`), JSON/JSONC use prettier (installed via mason), JSONL uses a custom `jq_compact` formatter (`jq -c .`, one record per line). Format-on-save can be toggled per-buffer with `<leader>tf`.
 
 ## Adding a New Plugin
 

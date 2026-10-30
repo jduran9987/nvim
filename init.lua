@@ -1,4 +1,4 @@
-vim.env.PATH = vim.env.HOME .. "/.cargo/bin:" .. vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
+vim.env.PATH = vim.env.HOME .. "/go/bin:" .. vim.env.HOME .. "/.cargo/bin:" .. vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
 
 require("keymaps")
 require("options")

@@ -4,6 +4,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
 
     dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
       { "williamboman/mason.nvim", config = true },
       { "williamboman/mason-lspconfig.nvim" },
     },
@@ -26,6 +27,13 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.general = capabilities.general or {}
       capabilities.general.positionEncodings = { "utf-16" }
+
+      -- Advertise nvim-cmp's completion support (snippets, resolve, etc.) so servers
+      -- like gopls send full completion items (e.g. Println(a ...any) with placeholders)
+      local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      if ok_cmp then
+        capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+      end
 
       -- Lua language server 
       vim.lsp.config("lua_ls", {
@@ -84,8 +92,35 @@ return {
         end,
       })
 
+      -- Go (gopls is installed via `go install`, not mason)
+      vim.lsp.config("gopls", {
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            gofumpt = true,
+            staticcheck = true,
+            completeUnimported = true,
+            analyses = {
+              unusedparams = true,
+              unusedwrite = true,
+              nilness = true,
+              shadow = true,
+            },
+            hints = {
+              assignVariableTypes = true,
+              compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = true,
+              functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
+            },
+          },
+        },
+      })
+
       -- Enable the servers
-      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd", "terraformls" })
+      vim.lsp.enable({ "lua_ls", "pyright", "ruff", "bashls", "clangd", "terraformls", "gopls" })
 
       -- Keymaps (buffer-local, only when LSP attaches)
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -106,6 +141,15 @@ return {
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
           vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+
+          -- Inlay hints: on by default where supported, <leader>th to toggle
+          if client and client:supports_method("textDocument/inlayHint") then
+            vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+            vim.keymap.set("n", "<leader>th", function()
+              local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf })
+              vim.lsp.inlay_hint.enable(not enabled, { bufnr = ev.buf })
+            end, { buffer = ev.buf, desc = "Toggle inlay hints (buffer)" })
+          end
         end,
       })
     end,
